@@ -10,15 +10,21 @@ passport.use(
             clientID: keys.google.clientID,
             clientSecret: keys.google.clientSecret
         },
-        (accessToken, refreshToken, profile, done) => {
-            // Passport callback function
-            new User({
+        // Passport callback function
+        async (accessToken, refreshToken, profile, done) => {
+            // Check if user already exists in our DB
+            const existingUser = await User.findOne({ googleID: profile.id });
+            if (existingUser) {
+                // Already have the user in DB
+                console.log('User already exists: ' + existingUser);
+            } else {
+                // If not, create a new user in DB
+                const newUser = await new User({
                     username: profile.displayName,
                     googleID: profile.id
-                })
-                .save()
-                .then((newUser) => {
-                    console.log(`New user created: ` + newUser);
-                });
+                }).save();
+                console.log('New user created: ' + newUser);
+            }
+
         })
 );
