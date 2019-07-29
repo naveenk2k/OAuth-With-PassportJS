@@ -12,8 +12,8 @@ const authCheck = (req, res, next) => {
 
 // When the user tries to visit the profile page (localhost:3000/profile), we check if they are logged in using the middleware function 'authCheck' [which gets the same (req, res) as the callback function below] and this decides what happens next (whether redirect or show profile page)
 router.get('/', authCheck, (req, res) => {
-    // Render profile page
-    res.send(`You are logged in. This is your profile. You are: ${req.user.username}`);
+	// Render profile page and send the user data to the frontend file to display
+	res.render('profile', {user: req.user});
 });
 
 module.exports = router;
