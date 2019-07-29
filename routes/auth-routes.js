@@ -18,12 +18,15 @@ router.get('/google', passport.authenticate('google', {
     scope: ['profile']
 }));
 
-// Callback route for google to redirect to
+// Callback route for google to redirect to.
+// When we go to '/google/redirect', express will first run the middleware 'passport.authenticate('google')' and then it will run the callback function
 router.get(
     '/google/redirect',
     passport.authenticate('google'),
     (req, res) => {
-        res.send('You reached a callback uri');
+        // If logged in successfully, passport attaches the currently logged-in user to the request body so we have access to them as req.user
+        // Now, we can redirect them to another page, perhaps a profile page and req.user gets sent along to that new route
+        res.redirect('/profile');
     }
 );
 
